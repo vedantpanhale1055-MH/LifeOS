@@ -1,0 +1,8 @@
+.dashboard-shell {
+  min-height: 100vh;
+  margin-left: 240px;
+}
+
+.dashboard-content {
+  padding: 24px 26px;
+}

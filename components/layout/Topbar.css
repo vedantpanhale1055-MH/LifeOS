@@ -1,0 +1,51 @@
+.topbar {
+  height: 70px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 26px;
+
+  border-bottom: 1px solid var(--border);
+
+  background: rgba(6, 16, 26, 0.85);
+
+  backdrop-filter: blur(12px);
+}
+
+.topbar-title {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+
+  gap: 18px;
+}
+
+.topbar-date {
+  color: var(--text-secondary);
+
+  font-size: 12px;
+}
+
+.notification-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  background: transparent;
+
+  color: var(--text-secondary);
+
+  transition: color 0.2s ease;
+}
+
+.notification-button:hover {
+  color: white;
+}
