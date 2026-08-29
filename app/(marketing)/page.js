@@ -10,15 +10,10 @@ export default function HomePage() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("lifeos-theme");
+    const savedTheme = localStorage.getItem("lifeos-theme") || "dark";
 
-    if (savedTheme) {
-      setTheme(savedTheme);
-      document.documentElement.setAttribute("data-theme", savedTheme);
-    } else {
-      document.documentElement.setAttribute("data-theme", "dark");
-    }
-
+    setTheme(savedTheme);
+    document.documentElement.setAttribute("data-theme", savedTheme);
     setMounted(true);
   }, []);
 
@@ -32,6 +27,7 @@ export default function HomePage() {
 
   return (
     <main className="landing-page">
+      {/* Navbar */}
       <nav className="navbar">
         <Link href="/" className="logo">
           <span className="logo-icon">✦</span>
@@ -49,7 +45,7 @@ export default function HomePage() {
           <button
             className="theme-toggle"
             onClick={toggleTheme}
-            aria-label="Toggle theme"
+            aria-label="Toggle light and dark theme"
             title={
               theme === "dark"
                 ? "Switch to light mode"
@@ -74,6 +70,7 @@ export default function HomePage() {
         </div>
       </nav>
 
+      {/* Hero */}
       <section className="hero" id="product">
         <div className="hero-content">
           <div className="hero-badge">
@@ -95,12 +92,11 @@ export default function HomePage() {
           </p>
 
           <div className="hero-buttons">
-            <Link href="/signup" className="primary-button">
-              Get Started for Free
-              <span>→</span>
+            <Link href="/signup" className="primary-btn">
+              Get Started for Free →
             </Link>
 
-            <a href="#features" className="secondary-button">
+            <a href="#features" className="secondary-btn">
               See how it works
             </a>
           </div>
@@ -110,77 +106,79 @@ export default function HomePage() {
           </p>
         </div>
 
+        {/* Orbit Visual */}
         <div className="hero-visual">
-          <div className="orbit">
-            <div className="orbit-ring ring-one"></div>
-            <div className="orbit-ring ring-two"></div>
-            <div className="orbit-ring ring-three"></div>
+          <div className="orbit orbit-one"></div>
+          <div className="orbit orbit-two"></div>
+          <div className="orbit orbit-three"></div>
 
-            <div className="core">
-              <div className="core-inner">✦</div>
-              <span>LifeOS</span>
+          <div className="core">
+            <div className="core-inner">
+              <span className="core-star">✦</span>
             </div>
 
-            <div className="orbit-item habits">
-              <span>✓</span>
-              Habits
-            </div>
+            <span className="core-label">LifeOS</span>
+          </div>
 
-            <div className="orbit-item tasks">
-              <span>✓</span>
-              Tasks
-            </div>
+          <div className="orbit-item habits">
+            <span>✓</span>
+            Habits
+          </div>
 
-            <div className="orbit-item calendar">
-              <span>▣</span>
-              Calendar
-            </div>
+          <div className="orbit-item tasks">
+            <span>✓</span>
+            Tasks
+          </div>
 
-            <div className="orbit-item projects">
-              <span>◇</span>
-              Projects
-            </div>
+          <div className="orbit-item calendar">
+            <span>▣</span>
+            Calendar
+          </div>
 
-            <div className="orbit-item assistant">
-              <span>✦</span>
-              AI Assistant
-            </div>
+          <div className="orbit-item projects">
+            <span>◇</span>
+            Projects
+          </div>
+
+          <div className="orbit-item ai">
+            <span>✦</span>
+            AI Assistant
           </div>
         </div>
       </section>
 
-      <section className="stats-section" id="features">
-        <div className="stats-intro">
-          <p className="stats-label">TRUSTED BY PRODUCTIVE PEOPLE</p>
+      {/* Stats */}
+      <section className="stats" id="features">
+        <div className="trusted">
+          <p>Trusted by productive people</p>
+
           <h2>Built for your entire life</h2>
 
-          <div className="users-row">
-            <div className="avatars">
-              <span>V</span>
-              <span>A</span>
-              <span>R</span>
-              <span>S</span>
-            </div>
+          <div className="avatar-row">
+            <div className="mini-avatar">V</div>
+            <div className="mini-avatar">A</div>
+            <div className="mini-avatar">R</div>
+            <div className="mini-avatar">S</div>
 
-            <p>
+            <span>
               <strong>10k+</strong> active users
-            </p>
+            </span>
           </div>
         </div>
 
-        <div className="stat-card">
-          <h3>98%</h3>
-          <p>Satisfaction</p>
+        <div className="stat-item">
+          <strong>98%</strong>
+          <span>Satisfaction</span>
         </div>
 
-        <div className="stat-card">
-          <h3>4.9/5</h3>
-          <p>Rating</p>
+        <div className="stat-item">
+          <strong>4.9/5</strong>
+          <span>Rating</span>
         </div>
 
-        <div className="stat-card">
-          <h3>250k+</h3>
-          <p>Tasks Completed</p>
+        <div className="stat-item">
+          <strong>250k+</strong>
+          <span>Tasks Completed</span>
         </div>
       </section>
     </main>
