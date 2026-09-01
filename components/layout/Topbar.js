@@ -4,6 +4,8 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import "./Topbar.css";
+
 export default function Topbar() {
   return (
     <header className="topbar">
@@ -12,7 +14,7 @@ export default function Topbar() {
           <Sparkles size={16} />
         </div>
 
-        <div>
+        <div className="topbar-workspace-text">
           <strong>My Workspace</strong>
           <span>LifeOS</span>
         </div>
@@ -24,9 +26,10 @@ export default function Topbar() {
           className="topbar-search"
         >
           <Search size={16} />
+
           <span>Search</span>
 
-          <kbd>⌘ K</kbd>
+          <kbd>Ctrl K</kbd>
         </button>
 
         <button

@@ -1,3 +1,7 @@
+/* =====================================
+   TOPBAR
+===================================== */
+
 .topbar {
   width: 100%;
   height: 68px;
@@ -15,16 +19,24 @@
   background:
     color-mix(
       in srgb,
-      var(--bg) 88%,
+      var(--bg) 94%,
       transparent
     );
 
   border-bottom:
     1px solid var(--border-soft);
 
-  backdrop-filter:
-    blur(18px);
+  backdrop-filter: blur(18px);
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
+
+
+/* =====================================
+   LEFT
+===================================== */
 
 .topbar-left {
   display: flex;
@@ -43,66 +55,89 @@
 
   border-radius: 10px;
 
-  background:
-    var(--purple-soft);
+  background: var(--purple-soft);
 
   color: var(--purple);
 }
 
-.topbar-left > div:last-child {
+.topbar-workspace-text {
   display: flex;
   flex-direction: column;
 
   gap: 2px;
 }
 
-.topbar-left strong {
+.topbar-workspace-text strong {
   color: var(--text-primary);
 
   font-size: 12px;
+
+  font-weight: 600;
 }
 
-.topbar-left span {
+.topbar-workspace-text span {
   color: var(--text-muted);
 
   font-size: 9px;
 }
 
+
+/* =====================================
+   RIGHT
+===================================== */
+
 .topbar-right {
   display: flex;
   align-items: center;
 
-  gap: 10px;
+  gap: 9px;
 }
+
+
+/* =====================================
+   SEARCH
+===================================== */
 
 .topbar-search {
   height: 36px;
 
-  padding: 0 11px;
+  min-width: 170px;
+
+  padding: 0 10px;
 
   display: flex;
   align-items: center;
 
-  gap: 8px;
+  gap: 7px;
 
   border:
     1px solid var(--border);
 
   border-radius: 9px;
 
-  background:
-    var(--surface);
+  background: var(--surface);
 
-  color:
-    var(--text-secondary);
+  color: var(--text-secondary);
 
   font-size: 10px;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.topbar-search:hover {
+  background: var(--surface-hover);
+}
+
+.topbar-search span {
+  flex: 1;
+
+  text-align: left;
 }
 
 .topbar-search kbd {
-  margin-left: 10px;
-
-  padding: 2px 5px;
+  padding: 3px 6px;
 
   border:
     1px solid var(--border);
@@ -116,7 +151,17 @@
     var(--text-muted);
 
   font-size: 8px;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
 }
+
+
+/* =====================================
+   NOTIFICATION
+===================================== */
 
 .notification-button {
   width: 36px;
@@ -128,16 +173,28 @@
   align-items: center;
   justify-content: center;
 
+  padding: 0;
+
   border:
     1px solid var(--border);
 
   border-radius: 9px;
 
+  background: var(--surface);
+
+  color: var(--text-secondary);
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.notification-button:hover {
   background:
-    var(--surface);
+    var(--surface-hover);
 
   color:
-    var(--text-secondary);
+    var(--text-primary);
 }
 
 .notification-dot {
@@ -157,29 +214,64 @@
   background: var(--purple);
 }
 
+
+/* =====================================
+   PLAN
+===================================== */
+
 .topbar-plan {
   padding: 6px 9px;
 
   border:
     1px solid
-    rgba(124, 92, 255, 0.2);
+    rgba(124, 92, 255, 0.22);
 
   border-radius: 8px;
 
-  background:
-    var(--purple-soft);
+  background: var(--purple-soft);
 
-  color:
-    var(--purple);
+  color: var(--purple);
 
-  font-size: 9px;
+  font-size: 8px;
 
-  font-weight: 600;
+  font-weight: 700;
+
+  letter-spacing: 0.5px;
 
   text-transform: uppercase;
 }
 
-@media (max-width: 650px) {
+
+/* =====================================
+   LIGHT MODE
+===================================== */
+
+html[data-theme="light"]
+.topbar {
+  background:
+    rgba(244, 246, 250, 0.9);
+}
+
+html[data-theme="light"]
+.topbar-search,
+html[data-theme="light"]
+.notification-button {
+  background: #ffffff;
+}
+
+html[data-theme="light"]
+.topbar-search:hover,
+html[data-theme="light"]
+.notification-button:hover {
+  background: #f7f8fa;
+}
+
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+@media (max-width: 700px) {
   .topbar {
     height: 62px;
 
@@ -188,6 +280,7 @@
 
   .topbar-search {
     width: 36px;
+    min-width: 36px;
 
     padding: 0;
 
@@ -200,7 +293,11 @@
   }
 }
 
-@media (max-width: 430px) {
+@media (max-width: 480px) {
+  .topbar-workspace-text span {
+    display: none;
+  }
+
   .topbar-plan {
     display: none;
   }
