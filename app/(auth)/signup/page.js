@@ -1,41 +1,80 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Check,
   Eye,
   EyeOff,
+  LoaderCircle,
   Lock,
   Mail,
   Moon,
   Sun,
   User,
 } from "lucide-react";
+
+import { supabase } from "../../../lib/supabase/client";
 import "./signup.css";
 
 export default function SignupPage() {
+  const router = useRouter();
+
   const [theme, setTheme] = useState("dark");
   const [mounted, setMounted] = useState(false);
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] =
+    useState("");
+
+  const [showPassword, setShowPassword] =
+    useState(false);
+
+  const [
+    showConfirmPassword,
+    setShowConfirmPassword,
+  ] = useState(false);
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [error, setError] =
+    useState("");
+
+  const [success, setSuccess] =
+    useState("");
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("lifeos-theme") || "dark";
+    const savedTheme =
+      localStorage.getItem("lifeos-theme") ||
+      "dark";
 
     setTheme(savedTheme);
-    document.documentElement.setAttribute("data-theme", savedTheme);
+
+    document.documentElement.setAttribute(
+      "data-theme",
+      savedTheme
+    );
+
     setMounted(true);
   }, []);
 
   function toggleTheme() {
-    const newTheme = theme === "dark" ? "light" : "dark";
+    const newTheme =
+      theme === "dark"
+        ? "light"
+        : "dark";
 
     setTheme(newTheme);
 
-    localStorage.setItem("lifeos-theme", newTheme);
+    localStorage.setItem(
+      "lifeos-theme",
+      newTheme
+    );
 
     document.documentElement.setAttribute(
       "data-theme",
@@ -43,23 +82,80 @@ export default function SignupPage() {
     );
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    // Supabase signup will be connected later.
-    console.log("Signup submitted");
+    setError("");
+    setSuccess("");
+
+    if (password.length < 8) {
+      setError(
+        "Password must contain at least 8 characters."
+      );
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError(
+        "Passwords do not match."
+      );
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { data, error: signupError } =
+        await supabase.auth.signUp({
+          email,
+          password,
+
+          options: {
+            data: {
+              full_name: name,
+            },
+          },
+        });
+
+      if (signupError) {
+        setError(signupError.message);
+        return;
+      }
+
+      if (data.session) {
+        router.push("/dashboard");
+        router.refresh();
+        return;
+      }
+
+      setSuccess(
+        "Account created! Check your email to confirm your account."
+      );
+    } catch (err) {
+      console.error(err);
+
+      setError(
+        "Something went wrong. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <main className="signup-page">
-      <div className="signup-glow signup-glow-one"></div>
-      <div className="signup-glow signup-glow-two"></div>
-
-      {/* Header */}
+      <div className="signup-glow signup-glow-one" />
+      <div className="signup-glow signup-glow-two" />
 
       <header className="signup-header">
-        <Link href="/" className="signup-logo">
-          <span className="signup-logo-icon">✦</span>
+        <Link
+          href="/"
+          className="signup-logo"
+        >
+          <span className="signup-logo-icon">
+            ✦
+          </span>
+
           <span>LifeOS</span>
         </Link>
 
@@ -69,11 +165,6 @@ export default function SignupPage() {
             className="signup-theme-toggle"
             onClick={toggleTheme}
             aria-label="Toggle theme"
-            title={
-              theme === "dark"
-                ? "Switch to light mode"
-                : "Switch to dark mode"
-            }
           >
             {mounted &&
               (theme === "dark" ? (
@@ -83,18 +174,17 @@ export default function SignupPage() {
               ))}
           </button>
 
-          <Link href="/" className="signup-back-home">
+          <Link
+            href="/"
+            className="signup-back-home"
+          >
             <ArrowLeft size={16} />
             Back to home
           </Link>
         </div>
       </header>
 
-      {/* Main Content */}
-
       <section className="signup-container">
-        {/* Left Side */}
-
         <div className="signup-intro">
           <div className="signup-badge">
             ✦ START BUILDING YOUR LIFEOS
@@ -106,9 +196,10 @@ export default function SignupPage() {
           </h1>
 
           <p>
-            Create your workspace and bring your tasks,
-            projects, habits, goals and focus together in
-            one intelligent system.
+            Create your workspace and bring
+            your tasks, projects, habits,
+            goals and focus together in one
+            intelligent system.
           </p>
 
           <div className="signup-benefits">
@@ -118,10 +209,13 @@ export default function SignupPage() {
               </span>
 
               <div>
-                <strong>Plan your day</strong>
+                <strong>
+                  Plan your day
+                </strong>
+
                 <p>
-                  Keep tasks, priorities and deadlines
-                  organized.
+                  Keep tasks, priorities and
+                  deadlines organized.
                 </p>
               </div>
             </div>
@@ -132,10 +226,13 @@ export default function SignupPage() {
               </span>
 
               <div>
-                <strong>Build better habits</strong>
+                <strong>
+                  Build better habits
+                </strong>
+
                 <p>
-                  Track consistency and create routines
-                  that last.
+                  Track consistency and create
+                  routines that last.
                 </p>
               </div>
             </div>
@@ -146,17 +243,18 @@ export default function SignupPage() {
               </span>
 
               <div>
-                <strong>Work with AI</strong>
+                <strong>
+                  Work with AI
+                </strong>
+
                 <p>
-                  Get intelligent help across your LifeOS
-                  workspace.
+                  Get intelligent help across
+                  your LifeOS workspace.
                 </p>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Signup Card */}
 
         <div className="signup-card">
           <div className="signup-card-heading">
@@ -167,14 +265,12 @@ export default function SignupPage() {
             <h2>Create your account</h2>
 
             <p>
-              Start building your personal operating
-              system.
+              Start building your personal
+              operating system.
             </p>
           </div>
 
           <form onSubmit={handleSubmit}>
-            {/* Name */}
-
             <div className="signup-form-group">
               <label htmlFor="name">
                 Full name
@@ -188,12 +284,16 @@ export default function SignupPage() {
                   type="text"
                   placeholder="Your name"
                   autoComplete="name"
+                  value={name}
+                  onChange={(event) =>
+                    setName(
+                      event.target.value
+                    )
+                  }
                   required
                 />
               </div>
             </div>
-
-            {/* Email */}
 
             <div className="signup-form-group">
               <label htmlFor="email">
@@ -208,12 +308,16 @@ export default function SignupPage() {
                   type="email"
                   placeholder="you@example.com"
                   autoComplete="email"
+                  value={email}
+                  onChange={(event) =>
+                    setEmail(
+                      event.target.value
+                    )
+                  }
                   required
                 />
               </div>
             </div>
-
-            {/* Password */}
 
             <div className="signup-form-group">
               <label htmlFor="password">
@@ -232,6 +336,12 @@ export default function SignupPage() {
                   }
                   placeholder="Create a password"
                   autoComplete="new-password"
+                  value={password}
+                  onChange={(event) =>
+                    setPassword(
+                      event.target.value
+                    )
+                  }
                   minLength={8}
                   required
                 />
@@ -240,12 +350,9 @@ export default function SignupPage() {
                   type="button"
                   className="signup-password-toggle"
                   onClick={() =>
-                    setShowPassword(!showPassword)
-                  }
-                  aria-label={
-                    showPassword
-                      ? "Hide password"
-                      : "Show password"
+                    setShowPassword(
+                      !showPassword
+                    )
                   }
                 >
                   {showPassword ? (
@@ -260,8 +367,6 @@ export default function SignupPage() {
                 Use at least 8 characters.
               </p>
             </div>
-
-            {/* Confirm Password */}
 
             <div className="signup-form-group">
               <label htmlFor="confirm-password">
@@ -280,6 +385,12 @@ export default function SignupPage() {
                   }
                   placeholder="Repeat your password"
                   autoComplete="new-password"
+                  value={confirmPassword}
+                  onChange={(event) =>
+                    setConfirmPassword(
+                      event.target.value
+                    )
+                  }
                   minLength={8}
                   required
                 />
@@ -292,11 +403,6 @@ export default function SignupPage() {
                       !showConfirmPassword
                     )
                   }
-                  aria-label={
-                    showConfirmPassword
-                      ? "Hide password"
-                      : "Show password"
-                  }
                 >
                   {showConfirmPassword ? (
                     <EyeOff size={18} />
@@ -307,27 +413,71 @@ export default function SignupPage() {
               </div>
             </div>
 
-            {/* Terms */}
-
             <div className="signup-terms">
               <label>
-                <input type="checkbox" required />
+                <input
+                  type="checkbox"
+                  required
+                />
 
                 <span>
                   I agree to the{" "}
-                  <a href="#">Terms of Service</a>{" "}
+                  <a href="#">
+                    Terms of Service
+                  </a>{" "}
                   and{" "}
-                  <a href="#">Privacy Policy</a>.
+                  <a href="#">
+                    Privacy Policy
+                  </a>
+                  .
                 </span>
               </label>
             </div>
 
+            {error && (
+              <p
+                style={{
+                  color: "#ff6b6b",
+                  fontSize: "12px",
+                  marginBottom: "14px",
+                }}
+              >
+                {error}
+              </p>
+            )}
+
+            {success && (
+              <p
+                style={{
+                  color: "#55d98a",
+                  fontSize: "12px",
+                  marginBottom: "14px",
+                  lineHeight: "1.5",
+                }}
+              >
+                {success}
+              </p>
+            )}
+
             <button
               type="submit"
               className="signup-submit"
+              disabled={loading}
             >
-              Create account
-              <span>→</span>
+              {loading ? (
+                <>
+                  <LoaderCircle
+                    size={17}
+                    className="signup-spinner"
+                  />
+                  Creating account...
+                </>
+              ) : (
+                <>
+                  Create account
+                  <span>→</span>
+                </>
+              )}
             </button>
           </form>
 
@@ -338,6 +488,8 @@ export default function SignupPage() {
           <button
             type="button"
             className="signup-google-button"
+            disabled
+            title="Google sign-in will be connected next"
           >
             <span className="signup-google-icon">
               G
