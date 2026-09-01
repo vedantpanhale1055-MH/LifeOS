@@ -27,9 +27,13 @@ export default function SignupPage() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] =
+  const [password, setPassword] =
     useState("");
+
+  const [
+    confirmPassword,
+    setConfirmPassword,
+  ] = useState("");
 
   const [showPassword, setShowPassword] =
     useState(false);
@@ -131,6 +135,11 @@ export default function SignupPage() {
       setSuccess(
         "Account created! Check your email to confirm your account."
       );
+
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
     } catch (err) {
       console.error(err);
 
@@ -144,8 +153,8 @@ export default function SignupPage() {
 
   return (
     <main className="signup-page">
-      <div className="signup-glow signup-glow-one" />
-      <div className="signup-glow signup-glow-two" />
+      <div className="signup-glow signup-glow-one"></div>
+      <div className="signup-glow signup-glow-two"></div>
 
       <header className="signup-header">
         <Link
@@ -165,6 +174,11 @@ export default function SignupPage() {
             className="signup-theme-toggle"
             onClick={toggleTheme}
             aria-label="Toggle theme"
+            title={
+              theme === "dark"
+                ? "Switch to light mode"
+                : "Switch to dark mode"
+            }
           >
             {mounted &&
               (theme === "dark" ? (
@@ -354,6 +368,7 @@ export default function SignupPage() {
                       !showPassword
                     )
                   }
+                  aria-label="Toggle password visibility"
                 >
                   {showPassword ? (
                     <EyeOff size={18} />
@@ -403,6 +418,7 @@ export default function SignupPage() {
                       !showConfirmPassword
                     )
                   }
+                  aria-label="Toggle confirm password visibility"
                 >
                   {showConfirmPassword ? (
                     <EyeOff size={18} />
@@ -466,10 +482,7 @@ export default function SignupPage() {
             >
               {loading ? (
                 <>
-                  <LoaderCircle
-                    size={17}
-                    className="signup-spinner"
-                  />
+                  <LoaderCircle size={17} />
                   Creating account...
                 </>
               ) : (
@@ -480,23 +493,6 @@ export default function SignupPage() {
               )}
             </button>
           </form>
-
-          <div className="signup-divider">
-            <span>or</span>
-          </div>
-
-          <button
-            type="button"
-            className="signup-google-button"
-            disabled
-            title="Google sign-in will be connected next"
-          >
-            <span className="signup-google-icon">
-              G
-            </span>
-
-            Continue with Google
-          </button>
 
           <p className="signup-login-text">
             Already have an account?{" "}

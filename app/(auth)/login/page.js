@@ -1,44 +1,97 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Eye,
   EyeOff,
+  LoaderCircle,
   Lock,
   Mail,
   Moon,
   Sun,
 } from "lucide-react";
+
+import { supabase } from "../../../lib/supabase/client";
 import "./login.css";
 
 export default function LoginPage() {
+  const router = useRouter();
+
   const [theme, setTheme] = useState("dark");
   const [mounted, setMounted] = useState(false);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   useEffect(() => {
-    const savedTheme = localStorage.getItem("lifeos-theme") || "dark";
+    const savedTheme =
+      localStorage.getItem("lifeos-theme") || "dark";
 
     setTheme(savedTheme);
-    document.documentElement.setAttribute("data-theme", savedTheme);
+
+    document.documentElement.setAttribute(
+      "data-theme",
+      savedTheme
+    );
+
     setMounted(true);
   }, []);
 
   function toggleTheme() {
-    const newTheme = theme === "dark" ? "light" : "dark";
+    const newTheme =
+      theme === "dark" ? "light" : "dark";
 
     setTheme(newTheme);
-    localStorage.setItem("lifeos-theme", newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
+
+    localStorage.setItem(
+      "lifeos-theme",
+      newTheme
+    );
+
+    document.documentElement.setAttribute(
+      "data-theme",
+      newTheme
+    );
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    // Supabase authentication will be connected later.
-    console.log("Login submitted");
+    setError("");
+    setLoading(true);
+
+    try {
+      const { data, error: loginError } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+      if (loginError) {
+        setError(loginError.message);
+        return;
+      }
+
+      if (data.user) {
+        router.push("/dashboard");
+        router.refresh();
+      }
+    } catch (err) {
+      console.error(err);
+
+      setError(
+        "Something went wrong. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -48,7 +101,10 @@ export default function LoginPage() {
 
       <header className="login-header">
         <Link href="/" className="login-logo">
-          <span className="login-logo-icon">✦</span>
+          <span className="login-logo-icon">
+            ✦
+          </span>
+
           <span>LifeOS</span>
         </Link>
 
@@ -72,7 +128,10 @@ export default function LoginPage() {
               ))}
           </button>
 
-          <Link href="/" className="back-home">
+          <Link
+            href="/"
+            className="back-home"
+          >
             <ArrowLeft size={16} />
             Back to home
           </Link>
@@ -81,7 +140,9 @@ export default function LoginPage() {
 
       <section className="login-container">
         <div className="login-intro">
-          <div className="login-badge">✦ YOUR PERSONAL OPERATING SYSTEM</div>
+          <div className="login-badge">
+            ✦ YOUR PERSONAL OPERATING SYSTEM
+          </div>
 
           <h1>
             Welcome back to
@@ -89,17 +150,26 @@ export default function LoginPage() {
           </h1>
 
           <p>
-            Pick up where you left off. Your tasks, projects, goals and daily
+            Pick up where you left off. Your
+            tasks, projects, goals and daily
             focus are waiting for you.
           </p>
 
           <div className="login-preview">
             <div className="preview-top">
-              <div className="preview-icon">✦</div>
+              <div className="preview-icon">
+                ✦
+              </div>
 
               <div>
-                <strong>Your day, in one place.</strong>
-                <span>Stay organized without the noise.</span>
+                <strong>
+                  Your day, in one place.
+                </strong>
+
+                <span>
+                  Stay organized without the
+                  noise.
+                </span>
               </div>
             </div>
 
@@ -131,13 +201,16 @@ export default function LoginPage() {
             <h2>Sign in</h2>
 
             <p>
-              Enter your details to continue to your workspace.
+              Enter your details to continue
+              to your workspace.
             </p>
           </div>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="email">Email address</label>
+              <label htmlFor="email">
+                Email address
+              </label>
 
               <div className="input-wrapper">
                 <Mail size={18} />
@@ -147,6 +220,10 @@ export default function LoginPage() {
                   type="email"
                   placeholder="you@example.com"
                   autoComplete="email"
+                  value={email}
+                  onChange={(event) =>
+                    setEmail(event.target.value)
+                  }
                   required
                 />
               </div>
@@ -154,11 +231,13 @@ export default function LoginPage() {
 
             <div className="form-group">
               <div className="password-label">
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password">
+                  Password
+                </label>
 
-                <Link href="/forgot-password">
+                <a href="#">
                   Forgot password?
-                </Link>
+                </a>
               </div>
 
               <div className="input-wrapper">
@@ -166,21 +245,31 @@ export default function LoginPage() {
 
                 <input
                   id="password"
-                  type={showPassword ? "text" : "password"}
+                  type={
+                    showPassword
+                      ? "text"
+                      : "password"
+                  }
                   placeholder="Enter your password"
                   autoComplete="current-password"
+                  value={password}
+                  onChange={(event) =>
+                    setPassword(
+                      event.target.value
+                    )
+                  }
                   required
                 />
 
                 <button
                   type="button"
                   className="password-toggle"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={
-                    showPassword
-                      ? "Hide password"
-                      : "Show password"
+                  onClick={() =>
+                    setShowPassword(
+                      !showPassword
+                    )
                   }
+                  aria-label="Toggle password visibility"
                 >
                   {showPassword ? (
                     <EyeOff size={18} />
@@ -198,24 +287,42 @@ export default function LoginPage() {
               </label>
             </div>
 
-            <button type="submit" className="login-submit">
-              Sign in
-              <span>→</span>
+            {error && (
+              <p
+                style={{
+                  color: "#ff6b6b",
+                  fontSize: "12px",
+                  marginBottom: "14px",
+                }}
+              >
+                {error}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              className="login-submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <LoaderCircle size={17} />
+                  Signing in...
+                </>
+              ) : (
+                <>
+                  Sign in
+                  <span>→</span>
+                </>
+              )}
             </button>
           </form>
 
-          <div className="login-divider">
-            <span>or</span>
-          </div>
-
-          <button type="button" className="google-button">
-            <span className="google-icon">G</span>
-            Continue with Google
-          </button>
-
           <p className="signup-text">
             Don&apos;t have an account?{" "}
-            <Link href="/signup">Create account</Link>
+            <Link href="/signup">
+              Create account
+            </Link>
           </p>
         </div>
       </section>
