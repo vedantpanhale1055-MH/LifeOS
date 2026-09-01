@@ -2,23 +2,25 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
 import {
-  LayoutDashboard,
-  CheckSquare,
-  FolderKanban,
-  Repeat2,
+  Bot,
   CalendarDays,
-  Timer,
-  Target,
-  Sparkles,
-  Settings,
+  CheckSquare,
+  ChevronLeft,
+  ChevronRight,
+  CircleDot,
+  FolderKanban,
+  LayoutDashboard,
   Network,
+  Settings,
+  Target,
+  Timer,
+  UserRound,
 } from "lucide-react";
-
+import { useState } from "react";
 import "./Sidebar.css";
 
-const navItems = [
+const navigation = [
   {
     label: "Today",
     href: "/dashboard",
@@ -37,7 +39,7 @@ const navItems = [
   {
     label: "Habits",
     href: "/habits",
-    icon: Repeat2,
+    icon: CircleDot,
   },
   {
     label: "Calendar",
@@ -62,43 +64,99 @@ const navItems = [
   {
     label: "AI Assistant",
     href: "/assistant",
-    icon: Sparkles,
+    icon: Bot,
   },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
 
+  const [collapsed, setCollapsed] =
+    useState(false);
+
+  function isActive(href) {
+    if (href === "/dashboard") {
+      return pathname === "/dashboard";
+    }
+
+    return pathname.startsWith(href);
+  }
+
   return (
-    <aside className="sidebar">
-      <Link href="/dashboard" className="sidebar-logo">
-        <div className="sidebar-logo-icon">
-          ✦
-        </div>
+    <aside
+      className={
+        collapsed
+          ? "sidebar sidebar-collapsed"
+          : "sidebar"
+      }
+    >
+      <div className="sidebar-top">
+        <Link
+          href="/dashboard"
+          className="sidebar-logo"
+        >
+          <span className="sidebar-logo-icon">
+            ✦
+          </span>
 
-        <span>LifeOS</span>
-      </Link>
+          {!collapsed && (
+            <span className="sidebar-logo-text">
+              LifeOS
+            </span>
+          )}
+        </Link>
 
-      <nav className="sidebar-nav">
-        {navItems.map((item) => {
+        <button
+          type="button"
+          className="sidebar-collapse-button"
+          onClick={() =>
+            setCollapsed(!collapsed)
+          }
+          aria-label={
+            collapsed
+              ? "Expand sidebar"
+              : "Collapse sidebar"
+          }
+          title={
+            collapsed
+              ? "Expand sidebar"
+              : "Collapse sidebar"
+          }
+        >
+          {collapsed ? (
+            <ChevronRight size={16} />
+          ) : (
+            <ChevronLeft size={16} />
+          )}
+        </button>
+      </div>
+
+      <nav className="sidebar-navigation">
+        {navigation.map((item) => {
           const Icon = item.icon;
-
-          const active =
-            pathname === item.href ||
-            pathname.startsWith(`${item.href}/`);
 
           return (
             <Link
-              key={item.href}
               href={item.href}
+              key={item.href}
               className={
-                active
+                isActive(item.href)
                   ? "sidebar-link active"
                   : "sidebar-link"
               }
+              title={
+                collapsed
+                  ? item.label
+                  : undefined
+              }
             >
-              <Icon size={17} />
-              <span>{item.label}</span>
+              <span className="sidebar-link-icon">
+                <Icon size={18} />
+              </span>
+
+              {!collapsed && (
+                <span>{item.label}</span>
+              )}
             </Link>
           );
         })}
@@ -107,26 +165,47 @@ export default function Sidebar() {
       <div className="sidebar-bottom">
         <Link
           href="/settings"
-          className="sidebar-settings"
+          className={
+            isActive("/settings")
+              ? "sidebar-link active"
+              : "sidebar-link"
+          }
+          title={
+            collapsed
+              ? "Settings"
+              : undefined
+          }
         >
-          <Settings size={17} />
-          <span>Settings</span>
+          <span className="sidebar-link-icon">
+            <Settings size={18} />
+          </span>
+
+          {!collapsed && (
+            <span>Settings</span>
+          )}
         </Link>
 
-        <div className="sidebar-user">
+        <div className="sidebar-profile">
           <div className="sidebar-avatar">
-            V
+            <UserRound size={18} />
           </div>
 
-          <div>
-            <div className="sidebar-user-name">
-              Vedant
-            </div>
+          {!collapsed && (
+            <>
+              <div className="sidebar-profile-info">
+                <strong>LifeOS User</strong>
+                <span>Free plan</span>
+              </div>
 
-            <div className="sidebar-user-plan">
-              Pro Plan
-            </div>
-          </div>
+              <button
+                type="button"
+                className="sidebar-profile-button"
+                aria-label="Profile options"
+              >
+                •••
+              </button>
+            </>
+          )}
         </div>
       </div>
     </aside>
