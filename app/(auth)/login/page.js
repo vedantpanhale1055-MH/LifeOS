@@ -21,18 +21,35 @@ export default function LoginPage() {
   const router = useRouter();
 
   const [theme, setTheme] = useState("dark");
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] =
+    useState(false);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [
+    checkingSession,
+    setCheckingSession,
+  ] = useState(true);
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [email, setEmail] =
+    useState("");
+
+  const [password, setPassword] =
+    useState("");
+
+  const [
+    showPassword,
+    setShowPassword,
+  ] = useState(false);
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [error, setError] =
+    useState("");
 
   useEffect(() => {
     const savedTheme =
-      localStorage.getItem("lifeos-theme") || "dark";
+      localStorage.getItem("lifeos-theme") ||
+      "dark";
 
     setTheme(savedTheme);
 
@@ -44,9 +61,45 @@ export default function LoginPage() {
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    async function checkSession() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (session) {
+        router.replace("/dashboard");
+        return;
+      }
+
+      setCheckingSession(false);
+    }
+
+    checkSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (
+          event === "SIGNED_IN" &&
+          session
+        ) {
+          router.replace("/dashboard");
+        }
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [router]);
+
   function toggleTheme() {
     const newTheme =
-      theme === "dark" ? "light" : "dark";
+      theme === "dark"
+        ? "light"
+        : "dark";
 
     setTheme(newTheme);
 
@@ -68,11 +121,16 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { data, error: loginError } =
-        await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
+      const {
+        data,
+        error: loginError,
+      } =
+        await supabase.auth.signInWithPassword(
+          {
+            email,
+            password,
+          }
+        );
 
       if (loginError) {
         setError(loginError.message);
@@ -80,7 +138,7 @@ export default function LoginPage() {
       }
 
       if (data.user) {
-        router.push("/dashboard");
+        router.replace("/dashboard");
         router.refresh();
       }
     } catch (err) {
@@ -94,13 +152,38 @@ export default function LoginPage() {
     }
   }
 
+  if (checkingSession) {
+    return (
+      <main
+        className="login-page"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <p
+          style={{
+            color: "var(--text-secondary)",
+            fontSize: "12px",
+          }}
+        >
+          Checking your LifeOS session...
+        </p>
+      </main>
+    );
+  }
+
   return (
     <main className="login-page">
       <div className="login-glow login-glow-one"></div>
       <div className="login-glow login-glow-two"></div>
 
       <header className="login-header">
-        <Link href="/" className="login-logo">
+        <Link
+          href="/"
+          className="login-logo"
+        >
           <span className="login-logo-icon">
             ✦
           </span>
@@ -222,7 +305,9 @@ export default function LoginPage() {
                   autoComplete="email"
                   value={email}
                   onChange={(event) =>
-                    setEmail(event.target.value)
+                    setEmail(
+                      event.target.value
+                    )
                   }
                   required
                 />
@@ -280,13 +365,6 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="remember-row">
-              <label>
-                <input type="checkbox" />
-                <span>Remember me</span>
-              </label>
-            </div>
-
             {error && (
               <p
                 style={{
@@ -306,7 +384,9 @@ export default function LoginPage() {
             >
               {loading ? (
                 <>
-                  <LoaderCircle size={17} />
+                  <LoaderCircle
+                    size={17}
+                  />
                   Signing in...
                 </>
               ) : (
