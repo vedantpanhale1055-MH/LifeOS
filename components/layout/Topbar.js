@@ -1,50 +1,63 @@
+"use client";
+
 import {
   Bell,
-  Search,
-  Sparkles,
+  CalendarDays,
+  Plus,
 } from "lucide-react";
 
-import "./Topbar.css";
-
 export default function Topbar() {
-  return (
-    <header className="topbar">
-      <div className="topbar-left">
-        <div className="topbar-workspace-icon">
-          <Sparkles size={16} />
-        </div>
+  const today = new Date();
 
-        <div className="topbar-workspace-text">
-          <strong>My Workspace</strong>
-          <span>LifeOS</span>
+  const formattedDate =
+    today.toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+
+  return (
+    <header className="lifeos-topbar">
+      <div className="topbar-greeting">
+        <span className="topbar-greeting-icon">
+          👋
+        </span>
+
+        <div>
+          <h2>Good evening!</h2>
+
+          <p>
+            Here&apos;s what&apos;s happening
+            across your LifeOS today.
+          </p>
         </div>
       </div>
 
-      <div className="topbar-right">
-        <button
-          type="button"
-          className="topbar-search"
-        >
-          <Search size={16} />
+      <div className="topbar-actions">
+        <div className="topbar-date">
+          <CalendarDays size={15} />
 
-          <span>Search</span>
-
-          <kbd>Ctrl K</kbd>
-        </button>
+          <span>{formattedDate}</span>
+        </div>
 
         <button
           type="button"
-          className="notification-button"
+          className="topbar-icon-button"
           aria-label="Notifications"
         >
-          <Bell size={18} />
+          <Bell size={17} />
 
-          <span className="notification-dot"></span>
+          <span className="topbar-notification-dot" />
         </button>
 
-        <div className="topbar-plan">
-          Free
-        </div>
+        <button
+          type="button"
+          className="topbar-primary-button"
+        >
+          <Plus size={16} />
+
+          <span>New task</span>
+        </button>
       </div>
     </header>
   );

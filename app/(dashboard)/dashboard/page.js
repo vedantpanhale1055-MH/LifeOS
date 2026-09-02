@@ -1,9 +1,7 @@
-"use client";
+import Link from "next/link";
 
-import { useEffect, useState } from "react";
 import {
   ArrowRight,
-  Brain,
   CalendarDays,
   Check,
   CheckCircle2,
@@ -11,577 +9,475 @@ import {
   Clock3,
   Flame,
   FolderKanban,
-  ListTodo,
-  Moon,
   MoreHorizontal,
   Plus,
   Sparkles,
-  Sun,
   Target,
   Timer,
-  TrendingUp,
 } from "lucide-react";
+
 import "./dashboard.css";
 
+const tasks = [
+  {
+    title: "Finish LifeOS dashboard",
+    project: "LifeOS",
+    time: "Today",
+    priority: "High",
+    done: false,
+  },
+  {
+    title: "Review project roadmap",
+    project: "Planning",
+    time: "2:00 PM",
+    priority: "Medium",
+    done: false,
+  },
+  {
+    title: "30 minute workout",
+    project: "Personal",
+    time: "6:00 PM",
+    priority: "Low",
+    done: true,
+  },
+];
+
+const projects = [
+  {
+    name: "LifeOS",
+    category: "Development",
+    progress: 72,
+    color: "purple",
+  },
+  {
+    name: "Portfolio",
+    category: "Career",
+    progress: 48,
+    color: "blue",
+  },
+  {
+    name: "AI Learning",
+    category: "Learning",
+    progress: 35,
+    color: "green",
+  },
+];
+
+const habits = [
+  {
+    name: "Workout",
+    streak: 12,
+    done: true,
+  },
+  {
+    name: "Read 20 minutes",
+    streak: 6,
+    done: true,
+  },
+  {
+    name: "Drink enough water",
+    streak: 4,
+    done: false,
+  },
+];
+
 export default function DashboardPage() {
-  const [theme, setTheme] = useState("dark");
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    const savedTheme =
-      localStorage.getItem("lifeos-theme") || "dark";
-
-    setTheme(savedTheme);
-
-    document.documentElement.setAttribute(
-      "data-theme",
-      savedTheme
-    );
-
-    setMounted(true);
-  }, []);
-
-  function toggleTheme() {
-    const newTheme =
-      theme === "dark" ? "light" : "dark";
-
-    setTheme(newTheme);
-
-    localStorage.setItem(
-      "lifeos-theme",
-      newTheme
-    );
-
-    document.documentElement.setAttribute(
-      "data-theme",
-      newTheme
-    );
-  }
-
-  const tasks = [
-    {
-      id: 1,
-      title: "Finish LifeOS dashboard",
-      project: "LifeOS",
-      time: "Today",
-      priority: "High",
-      completed: false,
-    },
-    {
-      id: 2,
-      title: "Review project roadmap",
-      project: "Planning",
-      time: "2:00 PM",
-      priority: "Medium",
-      completed: false,
-    },
-    {
-      id: 3,
-      title: "30 minute workout",
-      project: "Personal",
-      time: "6:00 PM",
-      priority: "Low",
-      completed: true,
-    },
-  ];
-
-  const habits = [
-    {
-      name: "Workout",
-      streak: 12,
-      completed: true,
-    },
-    {
-      name: "Read 20 mins",
-      streak: 7,
-      completed: true,
-    },
-    {
-      name: "Drink water",
-      streak: 5,
-      completed: false,
-    },
-  ];
-
   return (
     <div className="life-dashboard">
-      {/* Top heading */}
-
-      <section className="dashboard-heading">
+      <div className="dashboard-page-title">
         <div>
-          <p className="dashboard-date">
-            Monday · Your daily overview
-          </p>
+          <span>OVERVIEW</span>
 
-          <h1>
-            Good evening
-            <span className="dashboard-wave">
-              {" "}
-              👋
-            </span>
-          </h1>
-
-          <p className="dashboard-subtitle">
-            Here&apos;s what&apos;s happening
-            across your LifeOS today.
-          </p>
+          <h1>Today</h1>
         </div>
 
-        <div className="dashboard-heading-actions">
-          <button
-            className="dashboard-theme-toggle"
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
-            title={
-              theme === "dark"
-                ? "Switch to light mode"
-                : "Switch to dark mode"
-            }
-          >
-            {mounted &&
-              (theme === "dark" ? (
-                <Sun size={18} />
-              ) : (
-                <Moon size={18} />
-              ))}
-          </button>
+        <p>
+          Monday, 2 September 2026
+        </p>
+      </div>
 
-          <button className="dashboard-primary-button">
-            <Plus size={17} />
-            New task
-          </button>
-        </div>
+      {/* STATS */}
+
+      <section className="dashboard-stats">
+        <article className="stat-card stat-purple">
+          <div className="stat-icon">
+            <CheckCircle2 size={20} />
+          </div>
+
+          <div className="stat-label">
+            Tasks today
+          </div>
+
+          <strong>8</strong>
+
+          <p>
+            <span>3 completed</span>
+            out of 8 tasks
+          </p>
+        </article>
+
+        <article className="stat-card stat-blue">
+          <div className="stat-icon">
+            <FolderKanban size={20} />
+          </div>
+
+          <div className="stat-label">
+            Active projects
+          </div>
+
+          <strong>4</strong>
+
+          <p>
+            <span>2 on track</span>
+            this week
+          </p>
+        </article>
+
+        <article className="stat-card stat-orange">
+          <div className="stat-icon">
+            <Flame size={20} />
+          </div>
+
+          <div className="stat-label">
+            Best streak
+          </div>
+
+          <strong>12 days</strong>
+
+          <p>
+            Workout habit
+          </p>
+        </article>
+
+        <article className="stat-card stat-green">
+          <div className="stat-icon">
+            <Timer size={20} />
+          </div>
+
+          <div className="stat-label">
+            Focus today
+          </div>
+
+          <strong>1h 40m</strong>
+
+          <p>
+            <span>3 sessions</span>
+            completed
+          </p>
+        </article>
       </section>
 
-      {/* Overview Cards */}
+      {/* MAIN */}
 
-      <section className="overview-grid">
-        <div className="overview-card">
-          <div className="overview-icon purple">
-            <ListTodo size={19} />
-          </div>
+      <section className="dashboard-layout">
+        <div className="dashboard-main-column">
 
-          <div className="overview-content">
-            <span>Tasks today</span>
+          {/* TASKS */}
 
-            <div className="overview-value">
-              8
-            </div>
+          <article className="dashboard-section">
+            <header className="section-header">
+              <div>
+                <h2>Today&apos;s tasks</h2>
 
-            <p>
-              <strong>3</strong> completed
-            </p>
-          </div>
-        </div>
+                <p>
+                  What needs your attention
+                  today.
+                </p>
+              </div>
 
-        <div className="overview-card">
-          <div className="overview-icon blue">
-            <FolderKanban size={19} />
-          </div>
+              <Link href="/tasks">
+                View all
+                <ArrowRight size={14} />
+              </Link>
+            </header>
 
-          <div className="overview-content">
-            <span>Active projects</span>
-
-            <div className="overview-value">
-              4
-            </div>
-
-            <p>
-              <strong>2</strong> on track
-            </p>
-          </div>
-        </div>
-
-        <div className="overview-card">
-          <div className="overview-icon orange">
-            <Flame size={19} />
-          </div>
-
-          <div className="overview-content">
-            <span>Best streak</span>
-
-            <div className="overview-value">
-              12
-            </div>
-
-            <p>days · Workout</p>
-          </div>
-        </div>
-
-        <div className="overview-card">
-          <div className="overview-icon green">
-            <Timer size={19} />
-          </div>
-
-          <div className="overview-content">
-            <span>Focus today</span>
-
-            <div className="overview-value">
-              1h 40m
-            </div>
-
-            <p>
-              <strong>3</strong> sessions
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Grid */}
-
-      <section className="dashboard-main-grid">
-        {/* Tasks */}
-
-        <div className="dashboard-card tasks-card">
-          <div className="card-header">
-            <div>
-              <h2>Today&apos;s tasks</h2>
-              <p>
-                Keep moving through your day.
-              </p>
-            </div>
-
-            <button className="card-link">
-              View all
-              <ArrowRight size={14} />
-            </button>
-          </div>
-
-          <div className="task-list">
-            {tasks.map((task) => (
-              <div
-                className="dashboard-task"
-                key={task.id}
-              >
-                <button className="task-check">
-                  {task.completed ? (
-                    <CheckCircle2
-                      size={19}
-                      className="completed"
-                    />
-                  ) : (
-                    <Circle size={19} />
-                  )}
-                </button>
-
-                <div className="task-information">
-                  <p
+            <div className="dashboard-task-list">
+              {tasks.map((task) => (
+                <div
+                  className="dashboard-task"
+                  key={task.title}
+                >
+                  <button
+                    type="button"
                     className={
-                      task.completed
-                        ? "task-title task-completed"
-                        : "task-title"
+                      task.done
+                        ? "task-circle done"
+                        : "task-circle"
                     }
                   >
-                    {task.title}
-                  </p>
+                    {task.done ? (
+                      <Check size={13} />
+                    ) : (
+                      <Circle size={18} />
+                    )}
+                  </button>
 
-                  <div className="task-meta">
-                    <span>
-                      {task.project}
-                    </span>
+                  <div className="dashboard-task-info">
+                    <strong
+                      className={
+                        task.done
+                          ? "task-done-text"
+                          : ""
+                      }
+                    >
+                      {task.title}
+                    </strong>
+
+                    <div>
+                      <span>
+                        {task.project}
+                      </span>
+
+                      <span>
+                        <Clock3 size={11} />
+                        {task.time}
+                      </span>
+                    </div>
+                  </div>
+
+                  <span
+                    className={`task-priority ${task.priority.toLowerCase()}`}
+                  >
+                    {task.priority}
+                  </span>
+
+                  <button
+                    type="button"
+                    className="task-more"
+                  >
+                    <MoreHorizontal
+                      size={17}
+                    />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              className="dashboard-add-row"
+            >
+              <Plus size={14} />
+              Add task
+            </button>
+          </article>
+
+          {/* PROJECTS */}
+
+          <article className="dashboard-section">
+            <header className="section-header">
+              <div>
+                <h2>Active projects</h2>
+
+                <p>
+                  Progress across your current
+                  work.
+                </p>
+              </div>
+
+              <Link href="/projects">
+                View all
+                <ArrowRight size={14} />
+              </Link>
+            </header>
+
+            <div className="project-table">
+              {projects.map((project) => (
+                <div
+                  className="project-table-row"
+                  key={project.name}
+                >
+                  <div
+                    className={`project-table-icon ${project.color}`}
+                  >
+                    <FolderKanban
+                      size={16}
+                    />
+                  </div>
+
+                  <div className="project-table-name">
+                    <strong>
+                      {project.name}
+                    </strong>
 
                     <span>
-                      <Clock3 size={11} />
-                      {task.time}
+                      {project.category}
                     </span>
                   </div>
+
+                  <div className="project-table-progress">
+                    <div>
+                      <span>Progress</span>
+
+                      <strong>
+                        {project.progress}%
+                      </strong>
+                    </div>
+
+                    <div className="project-progress-track">
+                      <span
+                        className={
+                          project.color
+                        }
+                        style={{
+                          width: `${project.progress}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <ArrowRight
+                    size={14}
+                    className="project-arrow"
+                  />
                 </div>
-
-                <span
-                  className={`task-priority ${task.priority.toLowerCase()}`}
-                >
-                  {task.priority}
-                </span>
-
-                <button className="task-more">
-                  <MoreHorizontal size={17} />
-                </button>
-              </div>
-            ))}
-          </div>
-
-          <button className="add-task-row">
-            <Plus size={15} />
-            Add task
-          </button>
+              ))}
+            </div>
+          </article>
         </div>
 
-        {/* AI Assistant */}
+        {/* RIGHT COLUMN */}
 
-        <div className="dashboard-card ai-dashboard-card">
-          <div className="ai-card-glow"></div>
+        <aside className="dashboard-side-column">
 
-          <div className="ai-card-icon">
-            <Sparkles size={22} />
-          </div>
+          {/* AI */}
 
-          <div className="ai-card-content">
-            <span className="ai-label">
-              LIFEOS AI
-            </span>
+          <article className="dashboard-ai-card">
+            <div className="dashboard-ai-icon">
+              <Sparkles size={20} />
+            </div>
+
+            <span>LIFEOS AI</span>
 
             <h2>
               What should you focus on next?
             </h2>
 
             <p>
-              Your AI assistant can analyze
-              your tasks, projects and goals
-              to help prioritize your day.
+              Get a simple priority based on
+              your tasks, projects and goals.
             </p>
 
-            <button className="ask-ai-button">
-              <Brain size={16} />
+            <button type="button">
               Ask LifeOS AI
+
               <ArrowRight size={14} />
             </button>
-          </div>
-        </div>
+          </article>
 
-        {/* Projects */}
+          {/* HABITS */}
 
-        <div className="dashboard-card projects-card">
-          <div className="card-header">
-            <div>
-              <h2>Active projects</h2>
+          <article className="dashboard-section habits-section">
+            <header className="section-header">
+              <div>
+                <h2>Habits</h2>
 
-              <p>
-                Your current progress.
-              </p>
-            </div>
-
-            <button className="card-link">
-              Projects
-              <ArrowRight size={14} />
-            </button>
-          </div>
-
-          <div className="project-list">
-            <div className="dashboard-project">
-              <div className="project-top">
-                <div>
-                  <span className="project-dot purple"></span>
-                  <strong>LifeOS</strong>
-                </div>
-
-                <span>72%</span>
+                <p>
+                  Build consistency every day.
+                </p>
               </div>
 
-              <div className="project-progress">
-                <span
-                  style={{
-                    width: "72%",
-                  }}
-                ></span>
-              </div>
+              <Flame
+                size={17}
+                className="habit-header-icon"
+              />
+            </header>
 
-              <p>9 of 12 tasks completed</p>
-            </div>
-
-            <div className="dashboard-project">
-              <div className="project-top">
-                <div>
-                  <span className="project-dot blue"></span>
-                  <strong>Portfolio</strong>
-                </div>
-
-                <span>45%</span>
-              </div>
-
-              <div className="project-progress">
-                <span
-                  style={{
-                    width: "45%",
-                  }}
-                ></span>
-              </div>
-
-              <p>5 of 11 tasks completed</p>
-            </div>
-
-            <div className="dashboard-project">
-              <div className="project-top">
-                <div>
-                  <span className="project-dot green"></span>
-                  <strong>Learning</strong>
-                </div>
-
-                <span>30%</span>
-              </div>
-
-              <div className="project-progress">
-                <span
-                  style={{
-                    width: "30%",
-                  }}
-                ></span>
-              </div>
-
-              <p>3 of 10 tasks completed</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Habits */}
-
-        <div className="dashboard-card habits-card">
-          <div className="card-header">
-            <div>
-              <h2>Habits</h2>
-
-              <p>
-                Build consistency every day.
-              </p>
-            </div>
-
-            <Flame
-              size={18}
-              className="header-flame"
-            />
-          </div>
-
-          <div className="habit-list">
-            {habits.map((habit) => (
-              <div
-                className="habit-row"
-                key={habit.name}
-              >
-                <div className="habit-check">
-                  {habit.completed ? (
-                    <Check size={14} />
-                  ) : (
-                    <Circle size={15} />
-                  )}
-                </div>
-
-                <div className="habit-info">
-                  <strong>{habit.name}</strong>
+            <div className="habit-dashboard-list">
+              {habits.map((habit) => (
+                <div
+                  className="habit-dashboard-row"
+                  key={habit.name}
+                >
+                  <div
+                    className={
+                      habit.done
+                        ? "habit-state done"
+                        : "habit-state"
+                    }
+                  >
+                    {habit.done ? (
+                      <Check size={12} />
+                    ) : (
+                      <Circle size={16} />
+                    )}
+                  </div>
 
                   <span>
-                    <Flame size={11} />
-                    {habit.streak} day streak
+                    {habit.name}
                   </span>
-                </div>
 
-                <span
-                  className={
-                    habit.completed
-                      ? "habit-status done"
-                      : "habit-status"
-                  }
-                >
-                  {habit.completed
-                    ? "Done"
-                    : "Pending"}
+                  <strong>
+                    <Flame size={12} />
+                    {habit.streak}
+                  </strong>
+                </div>
+              ))}
+            </div>
+          </article>
+
+          {/* FOCUS */}
+
+          <article className="dashboard-section focus-section">
+            <header className="section-header">
+              <div>
+                <h2>Focus session</h2>
+
+                <p>
+                  Ready for deep work?
+                </p>
+              </div>
+            </header>
+
+            <div className="focus-content">
+              <div className="focus-symbol">
+                <Target size={20} />
+              </div>
+
+              <div>
+                <strong>25 minutes</strong>
+
+                <span>
+                  Default focus timer
                 </span>
               </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Focus */}
-
-        <div className="dashboard-card focus-card">
-          <div className="focus-icon">
-            <Target size={20} />
-          </div>
-
-          <div className="focus-content">
-            <span>FOCUS MODE</span>
-
-            <h2>
-              Ready for a focused session?
-            </h2>
-
-            <p>
-              Remove distractions and work
-              on what matters most.
-            </p>
-          </div>
-
-          <button className="start-focus-button">
-            <Timer size={16} />
-            Start focus
-          </button>
-        </div>
-
-        {/* Upcoming */}
-
-        <div className="dashboard-card upcoming-card">
-          <div className="card-header">
-            <div>
-              <h2>Upcoming</h2>
-
-              <p>
-                What&apos;s ahead today.
-              </p>
+              <button>
+                Start
+              </button>
             </div>
+          </article>
 
-            <CalendarDays size={18} />
-          </div>
+          {/* UPCOMING */}
 
-          <div className="upcoming-item">
-            <div className="upcoming-time">
-              <strong>2:00</strong>
-              <span>PM</span>
+          <article className="dashboard-section">
+            <header className="section-header">
+              <div>
+                <h2>Upcoming</h2>
+                <p>Next on your schedule.</p>
+              </div>
+
+              <CalendarDays size={17} />
+            </header>
+
+            <div className="upcoming-item">
+              <div className="upcoming-date">
+                <span>SEP</span>
+                <strong>03</strong>
+              </div>
+
+              <div>
+                <strong>
+                  Project presentation
+                </strong>
+
+                <span>
+                  11:00 AM
+                </span>
+              </div>
             </div>
-
-            <div className="upcoming-line"></div>
-
-            <div>
-              <strong>
-                Project review
-              </strong>
-
-              <p>
-                Review LifeOS progress
-              </p>
-            </div>
-          </div>
-
-          <div className="upcoming-item">
-            <div className="upcoming-time">
-              <strong>6:00</strong>
-              <span>PM</span>
-            </div>
-
-            <div className="upcoming-line blue"></div>
-
-            <div>
-              <strong>Workout</strong>
-
-              <p>
-                Evening training session
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Weekly Progress */}
-
-      <section className="weekly-banner">
-        <div className="weekly-icon">
-          <TrendingUp size={20} />
-        </div>
-
-        <div>
-          <span>WEEKLY PROGRESS</span>
-
-          <h3>
-            You&apos;re making progress.
-          </h3>
-
-          <p>
-            18 tasks completed and 6 focus
-            sessions this week.
-          </p>
-        </div>
-
-        <button>
-          View insights
-          <ArrowRight size={14} />
-        </button>
+          </article>
+        </aside>
       </section>
     </div>
   );
